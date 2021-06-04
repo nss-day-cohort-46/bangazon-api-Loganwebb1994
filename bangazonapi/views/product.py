@@ -18,8 +18,8 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ('id', 'name', 'price', 'number_sold', 'description',
-                  'quantity', 'created_date', 'location', 'image_path',
-                  'average_rating', 'can_be_rated', )
+                    'quantity', 'created_date', 'location', 'image_path',
+                    'average_rating', 'can_be_rated', )
         depth = 1
 
 
@@ -154,6 +154,8 @@ class Products(ViewSet):
             product = Product.objects.get(pk=pk)
             serializer = ProductSerializer(product, context={'request': request})
             return Response(serializer.data)
+        except Product.DoesNotExist as ex:
+            return Response(ex.args[0], status= status.HTTP_404_NOT_FOUND)
         except Exception as ex:
             return HttpResponseServerError(ex)
 
